@@ -44,6 +44,7 @@
   },
   "dependencies": {
     "@chainlink/contracts": "^0.3.1",
-    "@openzeppelin/contracts": "^4.4.2"
+    "@openzeppelin/contracts": "^4.4.2",
+    "ethereumjs-util": "^7.1.3"
   }
 }
