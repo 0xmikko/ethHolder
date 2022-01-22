@@ -35,6 +35,7 @@
   "scripts": {
     "build": "yarn clean && yarn compile",
     "deploy": "yarn build && npx hardhat run scripts/deploy.ts --network localhost",
+    "lobs": "yarn build && npx hardhat run scripts/lobs.ts --network mainnet",
     "clean": "npx hardhat clean",
     "fork": "scripts/fork.sh",
     "compile": "npx hardhat compile",

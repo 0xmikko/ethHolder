@@ -5,7 +5,7 @@ import { ERC721 } from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import { MerkleProof } from "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { AggregatorV3Interface } from "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
-import { CHAINLINK_ORACLE, WAD, ETHodlerNft } from "./HodlerNft.sol";
+import { CHAINLINK_ORACLE, ETHodlerNft } from "./HodlerNft.sol";
 import "hardhat/console.sol";
 
 enum MintStage {
@@ -15,6 +15,7 @@ enum MintStage {
 }
 
 address constant WETH_TOKEN = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
+address constant STETH_TOKEN = 0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84;
 uint256 constant WAD = 1e18;
 
 contract Minter {
@@ -38,9 +39,7 @@ contract Minter {
   function claim() external {
     require(isClaimAllowed(), "ETH price is too low to mint new tokens");
 
-    uint256 balance = IERC20(WETH_TOKEN).balanceOf(msg.sender) +
-      address(msg.sender).balance;
-
+    _checkAccountHasETH();
     _mint(msg.sender);
   }
 
@@ -50,7 +49,7 @@ contract Minter {
     bytes32[] calldata merkleProof
   ) external {
     require(!isClaimed(index), "MerkleDistributor: Account is already mined.");
-
+    _checkAccountHasETH();
     address account = msg.sender;
 
     // Verify the merkle proof.
@@ -77,6 +76,13 @@ contract Minter {
     uint256 claimedWord = claimedBitMap[claimedWordIndex];
     uint256 mask = (1 << claimedBitIndex);
     return claimedWord & mask == mask;
+  }
+
+  function _checkAccountHasETH() internal {
+    uint256 balance = IERC20(WETH_TOKEN).balanceOf(msg.sender) +
+      IERC20(STETH_TOKEN).balanceOf(msg.sender) +
+      address(msg.sender).balance;
+    require(balance > WAD, "You should have at least 1 ETH of your account");
   }
 
   function _setClaimed(uint256 index) private {
