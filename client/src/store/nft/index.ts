@@ -1,12 +1,18 @@
 import { RootState } from "../index";
 import { ThunkAction } from "redux-thunk";
 import { Mood } from "../../core/mood";
+import { ClaimStatus } from "../../core/merkle";
 
-export type NFTActions = {
-  type: "MOOD_SUCCESS";
-  payload: Mood;
-};
+export type NFTActions =
+  | {
+      type: "MOOD_SUCCESS";
+      payload: { mood: Mood; price: number; diff: number, totalSupply: number };
+    }
+  | {
+      type: "CLAIM_STATUS";
+      payload: ClaimStatus | undefined;
+    };
 
 export type ThunkNFTAction = ThunkAction<void, RootState, unknown, NFTActions>;
 
-export const moodSelector = (state: RootState) => state.nft.mood;
+export const nftSelector = (state: RootState) => state.nft;

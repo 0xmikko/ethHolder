@@ -8,13 +8,15 @@ The tokens supports 5 different market moods:
 | Price deviation 24h | Mood                 |
 |---------------------|----------------------|
 | > +10%              | To the moon          |
-| > +5%               | Bullish              |
-| [-5%; 5%]           | Stable               |
-| > -5%               | Panic                |
+| > +3%               | Bullish              |
+| [-3%; 3%]           | Stable               |
+| > -3%               | Panic                |
 | > -10%              | Applying to McDonals |
 
-## Default pictures and customisation
-Token provide 5 default pictures for differet moods from Wojak memes. You can make your own NFT token unique by setting up 
+## Build on ETH HODLER
+Token provide 5 default pictures for differet moods from Wojak memes. You can make your own images and change default ones. It would make your token unique.
+
+Usually, artist design NFT tokens, ETH HOLDER provides unique collective experience to make ETH HODLER tokens as great collection. 
 
 ## Token Supply
 Total supply depends on current ETH price: eg. ETH/USD = 3262, so max possible tokens quantity to be minted equals 3262. 

@@ -19,3 +19,11 @@ export const moodToImage = {
   [Mood.PANIC]: panic,
   [Mood.APPLYING_TO_MC_DONALDS]: applyingToMcDonalds,
 };
+
+export const moodToText = {
+  [Mood.TO_THE_MOON]: "To the Moon",
+  [Mood.BULLISH]: "Bullish",
+  [Mood.STABLE]: "Stable",
+  [Mood.PANIC]: "Panic",
+  [Mood.APPLYING_TO_MC_DONALDS]: "Applying to McDonalds",
+};

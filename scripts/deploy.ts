@@ -52,6 +52,8 @@ async function main() {
     (ipfs) => `https://ipfs.io/ipfs/${ipfs.hash}/`
   );
 
+
+  // PREPARING MERKLE TREE
   const gearHodlers = fs.readFileSync("gearHolders.txt").toString();
   const lobsHodlers = fs.readFileSync("lobsterHolders.txt").toString();
 
@@ -64,11 +66,11 @@ async function main() {
     result[element.toLowerCase()] = true;
   });
 
-  console.log(Object.keys(result));
-
   const merkle = parseAccounts(Object.keys(result));
+  fs.writeFileSync("./client/src/merkle.json", JSON.stringify(merkle))
 
-  console.log(images);
+
+  // CONTRACTS DEPLOYMENT
   const nft = await ETHodlerNft.deploy(images, merkle.merkleRoot);
   await nft.deployed();
 

@@ -27,6 +27,9 @@ const KOVAN_PRIVATE_KEY = process.env.KOVAN_PRIVATE_KEY || "";
 const config: HardhatUserConfig = {
   solidity: "0.8.10",
   networks: {
+    localhost: {
+      chainId: 31337,
+    },
     mainnet: {
       url: process.env.ETH_MAINNET_PROVIDER,
       accounts: [KOVAN_PRIVATE_KEY],

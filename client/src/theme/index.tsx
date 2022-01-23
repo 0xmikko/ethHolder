@@ -199,13 +199,13 @@ export default function ThemeProvider({
 
 export const FixedGlobalStyle = createGlobalStyle`
   html, input, textarea, button {
-    font-family: ${({ theme: { fontFamilies } }) => fontFamilies.default};
+    font-family: ${({theme: {fontFamilies}}) => fontFamilies.default};
     font-display: fallback;
   }
 
   @supports (font-variation-settings: normal) {
     html, input, textarea, button {
-      font-family: ${({ theme: { fontFamilies } }) => fontFamilies.default};
+      font-family: ${({theme: {fontFamilies}}) => fontFamilies.default};
     }
   }
 
@@ -214,7 +214,7 @@ export const FixedGlobalStyle = createGlobalStyle`
     margin: 0;
     padding: 0;
     min-height: 100vh;
-    background-image: linear-gradient(to right, #141e30, #243b55);
+    background-color: #080e18;
     color: white;
     font-family: 'Rubik', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -266,11 +266,14 @@ export const ThemedGlobalStyle = createGlobalStyle`
   }
 
   body {
-
+font-size: 18px;
+    line-height: 1.4;
 
   }
 
   h1 {
+    margin-top: 0;
+    margin-bottom: 0;
   }
 
   h2 {

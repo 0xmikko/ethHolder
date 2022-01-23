@@ -1,7 +1,8 @@
 import { RootState } from "../index";
 import { ethers, Signer } from "ethers";
 import { ThunkAction } from "redux-thunk";
-import { ETHodlerNft, Minter } from "../../../../typechain";
+import { ETHodlerNft, Minter } from "../../typechain";
+import {NFTActions} from "../nft";
 
 export const web3Selector = (state: RootState) => state.web3;
 
@@ -26,7 +27,7 @@ export type Web3Actions =
       };
     }
   | {
-      type: "WEB3_CONNECTED";
+      type: "SIGNER_CONNECTED";
       payload: {
         account: string;
         signer: Signer;
@@ -41,5 +42,5 @@ export type ThunkWeb3Action = ThunkAction<
   void,
   RootState,
   unknown,
-  Web3Actions
+  Web3Actions | NFTActions
 >;

@@ -1,8 +1,13 @@
 import { ethers } from "ethers";
 
 import { ThunkWeb3Action } from "./index";
-import { CHAIN_ID, MINTER_ADDRESS } from "../../config";
-import {ETHodlerNft__factory, Minter, Minter__factory} from "../../typechain";
+import { CHAIN_ID, JSON_RPC_PROVIDER, MINTER_ADDRESS } from "../../config";
+import {
+  AggregatorV3Interface__factory,
+  ETHodlerNft__factory,
+  Minter,
+  Minter__factory,
+} from "../../typechain";
 
 declare global {
   interface Window {
@@ -65,8 +70,8 @@ export const connectWeb3 =
       const signer = provider.getSigner();
 
       const networkId = await provider.detectNetwork();
-
-      if (networkId.chainId !== CHAIN_ID) {
+      const chainId = networkId.chainId === 1337 ? 31337 : networkId.chainId;
+      if (chainId !== CHAIN_ID) {
         dispatch({
           type: "WEB3_FAILED",
           payload: { error: "WRONG_NETWORK_ERROR", chainId: networkId.chainId },
@@ -74,18 +79,13 @@ export const connectWeb3 =
         return;
       }
 
-      const minter = Minter__factory.connect(MINTER_ADDRESS, signer) as Minter;
-
       const account = await signer.getAddress();
 
       dispatch({
-        type: "WEB3_CONNECTED",
+        type: "SIGNER_CONNECTED",
         payload: {
-          provider,
-          minter,
           account,
           signer,
-          chainId: networkId.chainId,
         },
       });
     } catch (e) {
@@ -94,34 +94,54 @@ export const connectWeb3 =
     }
   };
 
-export const updateProvider =
-  (
-    provider:
-      | ethers.providers.JsonRpcProvider
-      | Promise<ethers.providers.Web3Provider>
-  ): ThunkWeb3Action =>
-  async (dispatch, getState) => {
-    provider = await provider;
-    const network = await provider.detectNetwork();
+export const connectProvider =
+  (): ThunkWeb3Action => async (dispatch, getState) => {
+    try {
+      const provider = new ethers.providers.JsonRpcProvider(JSON_RPC_PROVIDER);
+      const network = await provider.detectNetwork();
 
-    if (network.chainId !== CHAIN_ID) {
-      console.log("INCORRECT NETWORK");
-      throw new Error("Incorrect network");
+      if (network.chainId !== CHAIN_ID) {
+        throw new Error("Incorrect network");
+      }
+
+      const minter = Minter__factory.connect(
+        MINTER_ADDRESS,
+        provider
+      ) as Minter;
+      const token = await minter.token();
+
+      const nft = ETHodlerNft__factory.connect(token, provider);
+      const chainLinkOracle = AggregatorV3Interface__factory.connect(
+        "0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419",
+        provider
+      );
+
+      const mood = await nft.getMarketMood();
+      const diff = await nft.getPriceChange();
+      const price = (await chainLinkOracle.latestRoundData()).answer;
+      const totalSupply = (await minter.totalSupply()).toNumber()
+
+      dispatch({
+        type: "PROVIDER_CONNECTED",
+        payload: {
+          provider,
+          minter,
+          token: nft,
+          chainId: network.chainId,
+        },
+      });
+
+      dispatch({
+        type: "MOOD_SUCCESS",
+        payload: {
+          mood,
+          diff: diff.toNumber() / 100,
+          price: price.div(1e6).toNumber() / 100,
+          totalSupply
+        },
+      });
+    } catch (e) {
+      console.error(`Cant connect to JSON-RPC provider: ${JSON_RPC_PROVIDER}`);
+      console.error(e);
     }
-
-    const minter = Minter__factory.connect(MINTER_ADDRESS, provider) as Minter;
-    const token = await minter.token();
-
-    const nft = ETHodlerNft__factory.connect(token, provider);
-
-    dispatch({
-      type: "WEB3_CONNECTED",
-      payload: {
-        provider,
-        minter,
-        nft
-        chainId: networkId.chainId,
-      },
-    });
-
   };

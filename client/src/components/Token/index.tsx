@@ -1,9 +1,65 @@
 import React from "react";
-import { useMood } from "../../hooks/useMood";
-import { moodToImage } from "../../core/mood";
+import { useNFT } from "../../hooks/useNFT";
+import { moodToImage, moodToText } from "../../core/mood";
 
 export function Token(): React.ReactElement {
-  const mood = useMood();
+  const { price, mood, diff, totalSupply } = useNFT();
 
-  return mood ? <img src={moodToImage[mood]} height={"160px"}  alt={mood.toString()}/> : <>Loading</>;
+  const image = mood ? (
+    <img src={moodToImage[mood]} height={"360px"} alt={mood.toString()} />
+  ) : (
+    <>Loading</>
+  );
+  const diffStr = diff ? (diff > 0 ? `+${diff}%` : `${diff}%`) : "";
+
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        marginBottom: "50px",
+      }}
+    >
+      {image}
+      <div style={{ marginLeft: "20px", textAlign: "left" }}>
+        <h1>
+          Price: {price || ""}{" "}
+          <span style={{ color: diff && diff > 0 ? "green" : "red" }}>
+            {" "}
+            {diffStr}{" "}
+          </span>
+        </h1>
+        <h1>
+          Mood:{" "}
+          {mood && (
+            <span
+              style={{
+                color: diff
+                  ? diff > 3
+                    ? "green"
+                    : diff < -3
+                    ? "red"
+                    : "white"
+                  : "white",
+              }}
+            >
+              {moodToText[mood]}
+            </span>
+          )}
+        </h1>
+        <h1>Minted: {totalSupply}</h1>
+        <h1>
+          Available:{" "}
+          {price && (
+            <>
+              {" "}
+              {`${Math.floor(price)} - ${totalSupply} = `}{" "}
+              {Math.floor(price) - totalSupply}
+            </>
+          )}
+        </h1>
+      </div>
+    </div>
+  );
 }
