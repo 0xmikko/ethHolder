@@ -9,6 +9,9 @@ export const Btn = styled.button`
   color: white;
   cursor: pointer;
   margin-bottom: 20px;
+  background-color: #c100fe;
+  justify-content: center;
+  align-items: center;
 
   :disabled {
     background-color: #4e4e4e;

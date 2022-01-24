@@ -5,38 +5,47 @@ import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import {MerkleProof} from "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
-import {CHAINLINK_ORACLE, ETHodlerNft} from "./HodlerNft.sol";
+import {ETHodlerNft} from "./HodlerNft.sol";
 import "hardhat/console.sol";
+//
 
-enum MintStage {
-    PAUSED,
-    BY_INVITATION,
-    OPEN
-}
-
-address constant WETH_TOKEN = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
-address constant STETH_TOKEN = 0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84;
 uint256 constant WAD = 1e18;
 
 contract Minter {
     AggregatorV3Interface public immutable priceFeed;
-    ETHodlerNft public token;
+    ETHodlerNft public immutable token;
     uint256 public totalSupply;
     bytes32 public immutable merkleRoot;
-    MintStage public stage;
+    IERC20 public immutable weth;
+    IERC20 public immutable stETH;
+    uint256 public immutable deadline;
 
     // This is a packed array of booleans.
     mapping(uint256 => uint256) private claimedBitMap;
 
     event Claimed(address indexed to, uint256 index);
 
-    constructor(string[] memory defaultPictures, bytes32 _merkleRoot) {
-        token = new ETHodlerNft(defaultPictures);
-        priceFeed = AggregatorV3Interface(CHAINLINK_ORACLE);
+    constructor(
+        address chainlinkOracle,
+        string[] memory defaultPictures,
+        bytes32 _merkleRoot,
+        address _weth,
+        address _stETH,
+        uint256 _deadline
+    ) {
+        token = new ETHodlerNft(chainlinkOracle, defaultPictures);
+        priceFeed = AggregatorV3Interface(chainlinkOracle);
         merkleRoot = _merkleRoot;
+        weth = IERC20(_weth);
+        stETH = IERC20(_stETH);
+        deadline = _deadline;
     }
 
     function claim() external {
+        require(
+            block.timestamp > deadline,
+            "CMP" // Cant Mint during Priority minting"
+        );
         _mint(msg.sender);
     }
 
@@ -45,7 +54,7 @@ contract Minter {
         uint256 salt,
         bytes32[] calldata merkleProof
     ) external {
-        require(!isClaimed(index), "Token is already mined.");
+        require(!isClaimed(index), "TAM"); // TAM: Token is already mined.
 
         address account = msg.sender;
 
@@ -54,7 +63,7 @@ contract Minter {
         require(
             merkleProof.length > 0 &&
                 MerkleProof.verify(merkleProof, merkleRoot, node),
-            "Invalid proof."
+            "IP" // Invalid proof.
         );
 
         // Mark it claimed and send the token.
@@ -64,7 +73,7 @@ contract Minter {
 
     function isClaimAllowed() public view returns (bool) {
         (, int256 price, , , ) = priceFeed.latestRoundData();
-        return (uint256(price) / WAD) > totalSupply;
+        return (uint256(price) / 1e8) > totalSupply;
     }
 
     function isClaimed(uint256 index) public view returns (bool) {
@@ -76,8 +85,8 @@ contract Minter {
     }
 
     function checkAccountHasETH() public view returns (bool) {
-        uint256 balance = IERC20(WETH_TOKEN).balanceOf(msg.sender) +
-            IERC20(STETH_TOKEN).balanceOf(msg.sender) +
+        uint256 balance = weth.balanceOf(msg.sender) +
+            stETH.balanceOf(msg.sender) +
             address(msg.sender).balance;
         return balance > WAD;
     }
@@ -93,9 +102,9 @@ contract Minter {
     function _mint(address account) internal {
         require(
             checkAccountHasETH(),
-            "You should have at least 1 ETH of your account"
+            "NEB" // Not enough balance: You should have at least 1 ETH of your account
         );
-        require(isClaimAllowed(), "ETH price is too low to mint new tokens");
+        require(isClaimAllowed(), "ATM"); // All Tokens are Minted
         token.mint(account, totalSupply);
         emit Claimed(account, totalSupply);
         totalSupply++;

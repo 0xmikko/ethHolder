@@ -5,7 +5,7 @@ export const Screen = styled.div`
   width: 100vw;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
 `;
 
@@ -18,3 +18,10 @@ export const MainDiv = styled.div`
   align-items: center;
   text-align: center;
 `;
+
+
+export const Link = styled.a`
+    color: white;
+  margin-left: 10px;
+  margin-right: 10px;
+    `

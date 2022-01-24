@@ -8,6 +8,7 @@ import {
   Minter,
   Minter__factory,
 } from "../../typechain";
+import actions from "../actions";
 
 declare global {
   interface Window {
@@ -69,12 +70,12 @@ export const connectWeb3 =
       });
       const signer = provider.getSigner();
 
-      const networkId = await provider.detectNetwork();
-      const chainId = networkId.chainId === 1337 ? 31337 : networkId.chainId;
+      const { chainId } = await provider.detectNetwork();
+
       if (chainId !== CHAIN_ID) {
         dispatch({
           type: "WEB3_FAILED",
-          payload: { error: "WRONG_NETWORK_ERROR", chainId: networkId.chainId },
+          payload: { error: "WRONG_NETWORK_ERROR", chainId },
         });
         return;
       }
@@ -108,18 +109,10 @@ export const connectProvider =
         MINTER_ADDRESS,
         provider
       ) as Minter;
+
       const token = await minter.token();
 
       const nft = ETHodlerNft__factory.connect(token, provider);
-      const chainLinkOracle = AggregatorV3Interface__factory.connect(
-        "0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419",
-        provider
-      );
-
-      const mood = await nft.getMarketMood();
-      const diff = await nft.getPriceChange();
-      const price = (await chainLinkOracle.latestRoundData()).answer;
-      const totalSupply = (await minter.totalSupply()).toNumber()
 
       dispatch({
         type: "PROVIDER_CONNECTED",
@@ -131,15 +124,7 @@ export const connectProvider =
         },
       });
 
-      dispatch({
-        type: "MOOD_SUCCESS",
-        payload: {
-          mood,
-          diff: diff.toNumber() / 100,
-          price: price.div(1e6).toNumber() / 100,
-          totalSupply
-        },
-      });
+      dispatch(actions.nft.nftState());
     } catch (e) {
       console.error(`Cant connect to JSON-RPC provider: ${JSON_RPC_PROVIDER}`);
       console.error(e);

@@ -16,3 +16,10 @@ export type ClaimStatus =
   | "CLAIM_PRIORITY_ALLOWED"
   | "CLAIM_ALLOWED"
   | "LESS_1_ETH";
+
+export type MintingStatus =
+  | "WAIT"
+  | "WAIT_METAMASK"
+  | "MINTING"
+  | "DONE"
+  | "ERROR";

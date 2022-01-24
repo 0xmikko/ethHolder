@@ -1,6 +1,6 @@
 import { Mood } from "../../core/mood";
 import { NFTActions } from "./index";
-import { ClaimStatus } from "../../core/merkle";
+import {ClaimStatus, MintingStatus} from "../../core/merkle";
 
 export interface NFTState {
   mood: Mood | undefined;
@@ -8,6 +8,7 @@ export interface NFTState {
   diff: number | undefined;
   claimStatus: ClaimStatus | undefined;
   totalSupply: number;
+  mintingProcess: MintingStatus
 }
 
 const initialState: NFTState = {
@@ -16,6 +17,7 @@ const initialState: NFTState = {
   diff: undefined,
   claimStatus: undefined,
   totalSupply: 0,
+  mintingProcess: "WAIT"
 };
 
 export function nftReducer(
@@ -34,6 +36,12 @@ export function nftReducer(
         ...state,
         claimStatus: action.payload,
       };
+
+    case "MINTING_STATUS":
+      return {
+        ...state,
+        mintingProcess: action.payload
+      }
   }
 
   return state;

@@ -1,14 +1,13 @@
 //SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.10;
 
-import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 import "hardhat/console.sol";
 
 // CONSTANTS
-address constant CHAINLINK_ORACLE = 0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419;
 int256 constant PERCENTAGE_FACTOR = 10_000;
 
 enum Mood {
@@ -26,11 +25,11 @@ contract ETHodlerNft is ERC721, Ownable {
     mapping(uint256 => mapping(Mood => string)) public customPfps;
     mapping(uint256 => bool) hasCustomPfp;
 
-    constructor(string[] memory defaultPictures)
-        ERC721("ETH Hodler Nft token", "HODL")
+    constructor(address chainlinkOracle, string[] memory defaultPictures)
+        ERC721("ETH Hodler Nft", "HODL")
     {
-        require(defaultPictures.length == 5, "Incorrect pictures array length");
-        priceFeed = AggregatorV3Interface(CHAINLINK_ORACLE);
+        require(defaultPictures.length == 5, "IPL"); // Incorrect pictures array length
+        priceFeed = AggregatorV3Interface(chainlinkOracle);
         for (uint256 i = 0; i < 5; i++) {
             pfps[Mood(i)] = defaultPictures[i];
         }
@@ -65,14 +64,15 @@ contract ETHodlerNft is ERC721, Ownable {
     ) external {
         require(
             msg.sender == ownerOf(tokenId),
-            "Only owners could customize tokens"
+            "OCC" // Only owners Could Customize tokens
         );
-        require(!hasCustomPfp[tokenId], "Token is already customized");
+        require(!hasCustomPfp[tokenId], "TAC"); // Token is already customized
         customPfps[tokenId][Mood.TO_THE_MOON] = toTheMoon;
         customPfps[tokenId][Mood.BULLISH] = bullish;
         customPfps[tokenId][Mood.STABLE] = stable;
         customPfps[tokenId][Mood.PANIC] = panic;
         customPfps[tokenId][Mood.APPLYING_TO_MC_DONALDS] = applyingToMacDonalds;
+        hasCustomPfp[tokenId] = true;
     }
 
     function mint(address to, uint256 tokenId) external onlyOwner {
@@ -104,7 +104,7 @@ contract ETHodlerNft is ERC721, Ownable {
 
     /// @dev Calculates ETH / USD price deviations for the last 24h
     /// @return diff - signed change in percentage format (x10.000)
-    function getPriceChange() public view returns (int256 diff) {
+    function getPriceChange() public view returns (int256) {
         (uint80 roundID, int256 priceNow, , uint256 timeStampNow, ) = priceFeed
             .latestRoundData();
 
@@ -115,7 +115,7 @@ contract ETHodlerNft is ERC721, Ownable {
             );
 
             if (timeStamp + 1 days < timeStampNow) {
-                diff = (PERCENTAGE_FACTOR * (priceNow - price)) / priceNow;
+                return (PERCENTAGE_FACTOR * (priceNow - price)) / price;
             }
 
             roundID--;

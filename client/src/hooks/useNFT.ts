@@ -11,15 +11,15 @@ export function useNFT(): NFTState {
 }
 
 export function useClaimStatus(): ClaimStatus | undefined {
-  const { signer, account } = useWeb3();
+  const { signer, account, minter } = useWeb3();
   const dispatch = useDispatch();
   const { claimStatus } = useSelector(nftSelector);
 
   useEffect(() => {
-    if (signer && account) {
+    if (signer && account && minter) {
       dispatch(actions.nft.isClaimable(account));
     }
-  }, [account]);
+  }, [account, minter]);
 
   return claimStatus;
 }

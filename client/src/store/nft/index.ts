@@ -1,7 +1,7 @@
 import { RootState } from "../index";
 import { ThunkAction } from "redux-thunk";
 import { Mood } from "../../core/mood";
-import { ClaimStatus } from "../../core/merkle";
+import {ClaimStatus, MintingStatus} from "../../core/merkle";
 
 export type NFTActions =
   | {
@@ -11,7 +11,11 @@ export type NFTActions =
   | {
       type: "CLAIM_STATUS";
       payload: ClaimStatus | undefined;
-    };
+    }
+    | {
+    type: "MINTING_STATUS";
+    payload: MintingStatus;
+}
 
 export type ThunkNFTAction = ThunkAction<void, RootState, unknown, NFTActions>;
 
