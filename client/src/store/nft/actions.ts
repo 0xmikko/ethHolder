@@ -129,12 +129,12 @@ export const mintPriority =
 
       const minter = Minter__factory.connect(MINTER_ADDRESS, signer) as Minter;
 
-      const maxGasFee = await signer.getGasPrice();
+      // const maxGasFee = await signer.getGasPrice();
 
       const receipt = await minter
         .connect(signer)
         .claimMerkle(claim.index, claim.salt, claim.proof, {
-          maxFeePerGas: maxGasFee.mul(12).div(10),
+          // maxFeePerGas: maxGasFee.mul(12).div(10),
         });
 
       dispatch({ type: "MINTING_STATUS", payload: "MINTING" });
