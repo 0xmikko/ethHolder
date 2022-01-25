@@ -28,7 +28,7 @@ export function YouTubeShow({ show, hide }: YoutubeShowProps) {
             allowFullScreen={false}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             title="YouTube video player"
-            src="https://www.youtube.com/embed/tVetuiMaFlI?autoplay=1&amp;controls=0&amp;enablejsapi=1&amp;origin=http%3A%2F%2Flocalhost%3A3000&amp;widgetid=3"
+            src="https://www.youtube.com/embed/GQBIOFw4if4?autoplay=1&amp;controls=0&amp;enablejsapi=1&amp;origin=http%3A%2F%2Flocalhost%3A3000&amp;widgetid=3"
             id="widget4"
             width="100%"
             height="100%"
