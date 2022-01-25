@@ -42,7 +42,7 @@ export function App() {
           in 20 hrs. No security audits passed.
         </div>
         <div>
-          <Link href={"https://twitter.com/mikaellazarev"} target={"_blank"}>
+          <Link href={"https://etherscan.io/address/0x39FDb940Dd8aF09e62375e36A79F12a86b7B2aa5"} target={"_blank"}>
             Etherscan
           </Link>
 
@@ -53,7 +53,7 @@ export function App() {
             Github
           </Link>
 
-          <Link href={"https://twitter.com/mikaellazarev"} target={"_blank"}>
+          <Link href={"https://opensea.io/collection/hodl-nft-com"} target={"_blank"}>
             Opensea
           </Link>
         </div>
