@@ -22,7 +22,7 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 // You need to export an object to set up your config
 // Go to https://hardhat.org/config/ to learn more
 
-const KOVAN_PRIVATE_KEY = process.env.KOVAN_PRIVATE_KEY || "";
+const MAINNET_PRIVATE_KEY = process.env.MAINNET_PRIVATE_KEY || "";
 
 const config: HardhatUserConfig = {
   solidity: "0.8.10",
@@ -32,10 +32,11 @@ const config: HardhatUserConfig = {
     },
     localhost: {
       timeout: 0,
+      accounts: [MAINNET_PRIVATE_KEY],
     },
     mainnet: {
       url: process.env.ETH_MAINNET_PROVIDER,
-      accounts: [KOVAN_PRIVATE_KEY],
+      accounts: [MAINNET_PRIVATE_KEY],
       chainId: 1,
     },
   },

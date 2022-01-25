@@ -27,13 +27,13 @@ contract Minter {
 
     constructor(
         address chainlinkOracle,
-        string[] memory defaultPictures,
+        address _token,
         bytes32 _merkleRoot,
         address _weth,
         address _stETH,
         uint256 _deadline
     ) {
-        token = new ETHodlerNft(chainlinkOracle, defaultPictures);
+        token = ETHodlerNft(_token);
         priceFeed = AggregatorV3Interface(chainlinkOracle);
         merkleRoot = _merkleRoot;
         weth = IERC20(_weth);

@@ -9,4 +9,4 @@ export const JSON_RPC_PROVIDER =
     : process.env.REACT_APP_JSON_RPC_FORK;
 
 
-export const CLAIM_PRIORITY = 1643065200;
+export const CLAIM_PRIORITY = 1643207675;

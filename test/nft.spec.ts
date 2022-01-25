@@ -53,14 +53,22 @@ describe("ETHHodler NFT", function () {
 
     chainlinkPriceFeedMock = await pricefeedFactory.deploy(2000e8, 8);
 
-    const ETHodlerNft = (await ethers.getContractFactory(
+    const tokenFactory = (await ethers.getContractFactory(
+      "ETHodlerNft"
+      // eslint-disable-next-line camelcase
+    )) as unknown as ETHodlerNft__factory;
+
+    nft = await tokenFactory.deploy(chainlinkPriceFeedMock.address, imagesURL);
+    await nft.deployed();
+
+    const minterFactory = (await ethers.getContractFactory(
       "Minter"
       // eslint-disable-next-line camelcase
     )) as unknown as Minter__factory;
 
-    minter = await ETHodlerNft.deploy(
+    minter = await minterFactory.deploy(
       chainlinkPriceFeedMock.address,
-      imagesURL,
+      nft.address,
       merkle.merkleRoot,
       weth.address,
       weth.address,
@@ -68,8 +76,7 @@ describe("ETHHodler NFT", function () {
     );
     await minter.deployed();
 
-    const nftAddress = await minter.token();
-    nft = ETHodlerNft__factory.connect(nftAddress, deployer);
+    await nft.transferOwnership(minter.address);
   });
 
   it("Minter claim reverts till PRIORITY DEADLINE", async function () {
