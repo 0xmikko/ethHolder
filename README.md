@@ -2,10 +2,10 @@
 
 This token was designed just for fun. The picture depends on the ETH/USD price change and shows the current market mood.
 
-NFT Token: https://etherscan.io/address/0x39FDb940Dd8aF09e62375e36A79F12a86b7B2aa5
-Minter: https://etherscan.io/address/0x4dc47d3833e9f296EAf68Aa1721d1A2AcC2fa18d
-Youtube: https://youtube.com/video/GQBIOFw4if4
-Opensea: https://opensea.io/collection/hodl-nft-com
+NFT Token: https://etherscan.io/address/0x39FDb940Dd8aF09e62375e36A79F12a86b7B2aa5  
+Minter: https://etherscan.io/address/0x4dc47d3833e9f296EAf68Aa1721d1A2AcC2fa18d  
+Youtube: https://youtube.com/video/GQBIOFw4if4  
+Opensea: https://opensea.io/collection/hodl-nft-com  
 
 ## 5 Market moods
 
