@@ -105,7 +105,7 @@ export function MagicButton(): React.ReactElement {
             case "DONE":
               return (
                 <TwitterShareButton
-                  url={"https://hodler-nft.com"}
+                  url={"https://hodl-nft.com"}
                   title="I've just minted ETH HODLER NFT baked by @mikaellazarev. Lets HODL ETH Together!"
                   style={{ width: "100%", marginBottom: 0 }}
                   hashtags={["ntf", "eth", "hodl"]}
