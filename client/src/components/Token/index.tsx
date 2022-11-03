@@ -10,7 +10,7 @@ export function Token(): React.ReactElement {
     <img
       src={mood ? moodToImage[mood] : loadingMood}
       height={"360px"}
-      alt={mood?.toString() || "loading"}
+      alt={ "loading"}
     />
   );
   const diffStr = diff ? (diff > 0 ? `+${diff}%` : `${diff}%`) : "Loading";

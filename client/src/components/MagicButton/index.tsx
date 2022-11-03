@@ -6,7 +6,7 @@ import { Btn } from "./styles";
 import { useClaimStatus, useNFT } from "../../hooks/useNFT";
 import { TwitterShareButton } from "react-share";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTwitter } from "@fortawesome/free-brands-svg-icons";
+
 
 export function MagicButton(): React.ReactElement {
   const { status, account, error } = useWeb3();
@@ -112,7 +112,7 @@ export function MagicButton(): React.ReactElement {
                 >
                   <Btn>
                     <FontAwesomeIcon
-                      icon={faTwitter}
+                      icon={"twitter"}
                       style={{ marginRight: "5px" }}
                     />
                     Share on Twitter
